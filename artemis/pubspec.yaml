@@ -39,6 +39,7 @@ dependencies:
   google_maps_flutter_web: ^0.4.0+5
   flutter_polyline_points: ^1.0.0
   location: ^4.4.0
+  dropdown_textfield: ^1.0.8
 
 dev_dependencies:
   flutter_test:
