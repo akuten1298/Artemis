@@ -21,10 +21,13 @@ class _MyAppState extends State<MyApp> {
 
   LocationData? currentLocation;
 
-  Location getCurrentLocation() {
+  void getCurrentLocation() async {
     Location location = Location();
-    location.getLocation().then((location) => currentLocation = location);
-    return location;
+    LocationData loc = await location.getLocation();
+    setState(() {
+      currentLocation = loc;
+    });
+    // return LatLng(currentLocation.latitude!, currentLocation.longitude!);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -32,25 +35,34 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 11.0,
-          ),
-          markers: {
-            Marker(
-                markerId: MarkerId("start"),
-                position: getCurrentLocation() as LatLng),
-            Marker(
-              markerId: MarkerId("stop"),
-              position: stop,
-            )
-          },
-        ),
+        body: currentLocation == null
+            ? Text("Locading")
+            : GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 11.0,
+                ),
+                markers: {
+                  Marker(
+                      markerId: MarkerId("start"),
+                      position: LatLng(currentLocation!.latitude!,
+                          currentLocation!.longitude!)),
+                  Marker(
+                    markerId: MarkerId("stop"),
+                    position: stop,
+                  )
+                },
+              ),
       ),
     );
   }
