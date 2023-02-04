@@ -15,7 +15,17 @@ class _MyAppState extends State<MyApp> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  LatLng start = const LatLng(45.521563, -122.677433);
+  LatLng stop = const LatLng(45.521563, -120.677433);
+
   LocationData? currentLocation;
+
+  Location getCurrentLocation() {
+    Location location = Location();
+    location.getLocation().then((location) => currentLocation = location);
+    return location;
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -31,6 +41,15 @@ class _MyAppState extends State<MyApp> {
             target: _center,
             zoom: 11.0,
           ),
+          markers: {
+            Marker(
+                markerId: MarkerId("start"),
+                position: getCurrentLocation() as LatLng),
+            Marker(
+              markerId: MarkerId("stop"),
+              position: stop,
+            )
+          },
         ),
       ),
     );
